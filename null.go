@@ -26,7 +26,7 @@ import (
 
 // V can be used to create new nullable types
 // that work with pointers and encoding/json.
-// T must support marshaling and unmarshaling.
+// T must support json marshaling and unmarshaling.
 type V[T any] struct {
 	Val T
 	Set bool
