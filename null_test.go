@@ -4,9 +4,9 @@
 	This file is part of go-null.
 
 	go-null is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, version 3 of the License.
-	
+
 	go-null is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License along with go-null. If not, see <https://www.gnu.org/licenses/>.
 */
 
@@ -19,9 +19,9 @@ import (
 
 func Example() {
 	var request struct {
-		PhoneNumber Str `json:"phone_number"`
+		PhoneNumber  Str     `json:"phone_number"`
 		EmailAddress *string `json:"email_address"`
-		Password string `json:"password"`
+		Password     string  `json:"password"`
 	}
 	if err := json.Unmarshal(
 		[]byte(`{
@@ -35,7 +35,7 @@ func Example() {
 
 	type UserInfo struct {
 		FirstName Str
-		LastName Str
+		LastName  Str
 	}
 	exampleFirstName := "Giorgi"
 	exampleLastName := "Kobakhidze"
@@ -49,7 +49,7 @@ func Example() {
 
 	var (
 		userInfo UserInfo
-		ok bool
+		ok       bool
 	)
 	if request.PhoneNumber.Set == (request.EmailAddress != nil) {
 		return
@@ -65,8 +65,8 @@ func Example() {
 	responseBytes, err := json.Marshal(
 		struct {
 			FirstName *string `json:"first_name,omitempty"`
-			LastName *string `json:"last_name,omitempty"`
-		} {
+			LastName  *string `json:"last_name,omitempty"`
+		}{
 			userInfo.FirstName.Ptr(),
 			userInfo.LastName.Ptr(),
 		},

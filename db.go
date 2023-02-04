@@ -4,9 +4,9 @@
 	This file is part of go-null.
 
 	go-null is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, version 3 of the License.
-	
+
 	go-null is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License along with go-null. If not, see <https://www.gnu.org/licenses/>.
 */
 
@@ -75,7 +75,7 @@ func (v *Byte) Scan(value any) (err error) {
 
 func (v Byte) Value() (driver.Value, error) {
 	return sql.NullByte{
-		Byte: v.Val,
+		Byte:  v.Val,
 		Valid: v.Set,
 	}.Value()
 }

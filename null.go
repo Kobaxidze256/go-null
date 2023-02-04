@@ -4,9 +4,9 @@
 	This file is part of go-null.
 
 	go-null is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, version 3 of the License.
-	
+
 	go-null is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
-	
+
 	You should have received a copy of the GNU Lesser General Public License along with go-null. If not, see <https://www.gnu.org/licenses/>.
 */
 
@@ -24,11 +24,9 @@ import (
 	"encoding/json"
 )
 
-/*
-	V can be used to create new nullable types
-	that work with pointers and encoding/json.
-	T must support marshaling and unmarshaling.
-*/
+// V can be used to create new nullable types
+// that work with pointers and encoding/json.
+// T must support marshaling and unmarshaling.
 type V[T any] struct {
 	Val T
 	Set bool
