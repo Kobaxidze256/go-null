@@ -32,7 +32,7 @@ func pVal[T any](p *T) (v T) {
 	return *p
 }
 
-func pSet[T any](p *T) bool {
+func pIsSet[T any](p *T) bool {
 	return p != nil
 }
 

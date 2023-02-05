@@ -53,9 +53,9 @@ func Example() {
 		userInfo UserInfo
 		ok       bool
 	)
-	if request.PhoneNumber.Set() == request.EmailAddress.Set() {
+	if request.PhoneNumber.IsSet() == request.EmailAddress.IsSet() {
 		return
-	} else if request.PhoneNumber.Set() {
+	} else if request.PhoneNumber.IsSet() {
 		userInfo, ok = userByPhoneNumber[request.PhoneNumber.Val()]
 	} else {
 		userInfo, ok = userByEmail[request.EmailAddress.Val()]
