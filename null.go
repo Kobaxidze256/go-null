@@ -10,48 +10,26 @@
 	You should have received a copy of the GNU Lesser General Public License along with go-null. If not, see <https://www.gnu.org/licenses/>.
 */
 
+// Package null provides types and functions
+// for representing absent values
+// without pointers, while being compatible
+// with pointers, encoding/json, database/sql
+// and github.com/go-playground/validator.
+//
+// Null values of these types shall be null.
+//
+// Warning: deep copies are not made.
 package null
 
-import (
-	"encoding/json"
-)
-
-// J can be used to create new nullable values
-// that work with encoding/json and pointers.
-// T must support json marshaling and unmarshaling.
-type J[T any] struct {
-	Val   T
-	IsSet bool
-}
-
-func (v *J[T]) MarshalJSON() ([]byte, error) {
-	if !v.IsSet {
-		return []byte("null"), nil
-	}
-	return json.Marshal(v.Val)
-}
-
-func (v *J[T]) UnmarshalJSON(data []byte) error {
-	if string(data) == "null" {
-		v.IsSet = false
-		return nil
-	}
-	v.IsSet = true
-	return json.Unmarshal(data, &v.Val)
-}
-
-func (v *J[T]) Ptr() *T {
-	if !v.IsSet {
-		return nil
-	}
-	return &v.Val
-}
-
-func NewJ[T any](p *T) (v J[T]) {
+// ptrVal returns the zero value of a type
+// on nil and the real value otherwise.
+func ptrVal[T any](p *T) (v T) {
 	if p == nil {
 		return
 	}
-	v.Val = *p
-	v.IsSet = true
-	return
+	return *p
+}
+
+func ptrIsSet[T any](p *T) bool {
+	return p != nil
 }
