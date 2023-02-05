@@ -15,69 +15,42 @@ package null
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/go-playground/validator/v10"
 )
 
 func Example() {
-	var request struct {
-		PhoneNumber  *StrP  `json:"phone_number" validate:"omitempty,e164"`
-		EmailAddress *StrP  `json:"email_address" validate:"required_without=PhoneNumber,excluded_with=PhoneNumber,omitempty,email"`
-		Password     string `json:"password"`
+	var x struct {
+		X *StrP `json:"x,omitempty"`
+		Y *StrP `json:"y,omitempty"`
 	}
-	if err := json.Unmarshal(
-		[]byte(`{
-			"email_address": "postmaster@example.com",
-			"password": "process candidates rankings farming ministries"
-		}`),
-		&request,
-	); err != nil {
-		return
-	}
-	if err := validator.New().Struct(request); err != nil {
-		return
-	}
+	_ = json.Unmarshal([]byte(`{"x": "x"}`), &x)
+	fmt.Println("x.X.IsSet():", x.X.IsSet())
+	fmt.Printf("x.X.Val(): %#v\n", x.X.Val())
+	fmt.Println("x.X.V().Set:", x.X.V().Set)
+	fmt.Printf("x.X.V().Val: %#v\n", x.X.V().Val)
+	fmt.Println("x.Y.IsSet():", x.Y.IsSet())
+	fmt.Println("x.Y.V().Set:", x.Y.V().Set)
 
-	type UserInfo struct {
-		FirstName Str
-		LastName  Str
-	}
-	user1 := UserInfo{
-		NewStr("Giorgi"),
-		NewStr("Kobakhidze"),
-	}
-
-	userByPhoneNumber := map[string]UserInfo{"+12065550100": user1}
-	userByEmail := map[string]UserInfo{"postmaster@example.com": user1}
-
-	var (
-		userInfo UserInfo
-		ok       bool
-	)
-	if request.PhoneNumber.IsSet() == request.EmailAddress.IsSet() {
-		return
-	} else if request.PhoneNumber.IsSet() {
-		userInfo, ok = userByPhoneNumber[request.PhoneNumber.Val()]
-	} else {
-		userInfo, ok = userByEmail[request.EmailAddress.Val()]
-	}
-	if !ok {
-		return
-	}
-
-	responseBytes, err := json.Marshal(
+	xXV := x.X.V()
+	xYV := x.Y.V()
+	yBytes, _ := json.Marshal(
 		struct {
-			FirstName *StrP `json:"first_name,omitempty"`
-			LastName  *StrP `json:"last_name,omitempty"`
+			X *StrP `json:"x,omitempty"`
+			Y *StrP `json:"y,omitempty"`
+			Z *StrP `json:"z,omitempty"`
 		}{
-			userInfo.FirstName.P(),
-			userInfo.LastName.P(),
+			xXV.P(),
+			xYV.P(),
+			nil,
 		},
 	)
-	if err != nil {
-		return
-	}
 
-	fmt.Println(string(responseBytes))
+	fmt.Printf("string(yBytes): %#q\n", string(yBytes))
 	// Output:
-	// {"first_name":"Giorgi","last_name":"Kobakhidze"}
+	// x.X.IsSet(): true
+	// x.X.Val(): "x"
+	// x.X.V().Set: true
+	// x.X.V().Val: "x"
+	// x.Y.IsSet(): false
+	// x.Y.V().Set: false
+	// string(yBytes): `{"x":"x"}`
 }
