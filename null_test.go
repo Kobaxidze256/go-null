@@ -15,13 +15,14 @@ package null
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/go-playground/validator/v10"
 )
 
 func Example() {
 	var request struct {
-		PhoneNumber  Str     `json:"phone_number"`
-		EmailAddress *string `json:"email_address"`
-		Password     string  `json:"password"`
+		PhoneNumber  *StrP  `json:"phone_number" validate:"omitempty,e164"`
+		EmailAddress *StrP  `json:"email_address" validate:"required_without=PhoneNumber,excluded_with=PhoneNumber,omitempty,email"`
+		Password     string `json:"password"`
 	}
 	if err := json.Unmarshal(
 		[]byte(`{
@@ -32,16 +33,17 @@ func Example() {
 	); err != nil {
 		return
 	}
+	if err := validator.New().Struct(request); err != nil {
+		return
+	}
 
 	type UserInfo struct {
 		FirstName Str
 		LastName  Str
 	}
-	exampleFirstName := "Giorgi"
-	exampleLastName := "Kobakhidze"
 	user1 := UserInfo{
-		NewStr(&exampleFirstName),
-		NewStr(&exampleLastName),
+		NewStr("Giorgi"),
+		NewStr("Kobakhidze"),
 	}
 
 	userByPhoneNumber := map[string]UserInfo{"+12065550100": user1}
@@ -51,12 +53,12 @@ func Example() {
 		userInfo UserInfo
 		ok       bool
 	)
-	if request.PhoneNumber.Set == (request.EmailAddress != nil) {
+	if request.PhoneNumber.Set() == request.EmailAddress.Set() {
 		return
-	} else if request.PhoneNumber.Set {
-		userInfo, ok = userByPhoneNumber[request.PhoneNumber.Val]
+	} else if request.PhoneNumber.Set() {
+		userInfo, ok = userByPhoneNumber[request.PhoneNumber.Val()]
 	} else {
-		userInfo, ok = userByEmail[NewStr(request.EmailAddress).Val]
+		userInfo, ok = userByEmail[request.EmailAddress.Val()]
 	}
 	if !ok {
 		return
@@ -64,11 +66,11 @@ func Example() {
 
 	responseBytes, err := json.Marshal(
 		struct {
-			FirstName *string `json:"first_name,omitempty"`
-			LastName  *string `json:"last_name,omitempty"`
+			FirstName *StrP `json:"first_name,omitempty"`
+			LastName  *StrP `json:"last_name,omitempty"`
 		}{
-			userInfo.FirstName.Ptr(),
-			userInfo.LastName.Ptr(),
+			userInfo.FirstName.P(),
+			userInfo.LastName.P(),
 		},
 	)
 	if err != nil {

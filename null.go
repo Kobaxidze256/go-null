@@ -11,9 +11,10 @@
 */
 
 // Package null provides types and functions
-// useful for representing absent values
+// for representing absent values
 // without pointers, while being compatible
-// with pointers, encoding/json and database/sql.
+// with pointers, encoding/json, database/sql
+// and github.com/go-playground/validator.
 //
 // Null values of these types shall be null.
 //
@@ -24,7 +25,27 @@ import (
 	"encoding/json"
 )
 
-// V can be used to create new nullable types
+func pVal[T any](p *T) (v T) {
+	if p == nil {
+		return
+	}
+	return *p
+}
+
+func pSet[T any](p *T) bool {
+	return p != nil
+}
+
+func pV[T any](p *T) (v V[T]) {
+	if p == nil {
+		return
+	}
+	v.Val = *p
+	v.Set = true
+	return
+}
+
+// V can be used to create new nullable values
 // that work with pointers and encoding/json.
 // T must support json marshaling and unmarshaling.
 type V[T any] struct {
@@ -48,20 +69,9 @@ func (v *V[T]) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &v.Val)
 }
 
-func (v *V[T]) Ptr() *T {
+func (v *V[T]) P() *T {
 	if !v.Set {
 		return nil
 	}
 	return &v.Val
-}
-
-func NewV[T any](ptr *T) (v V[T]) {
-	if ptr == nil {
-		return
-	}
-	v = V[T]{
-		Val: *ptr,
-		Set: true,
-	}
-	return
 }

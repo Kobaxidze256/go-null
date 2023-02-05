@@ -23,14 +23,13 @@ type Bool struct {
 	V[bool]
 }
 
-func NewBool(ptr *bool) (v Bool) {
-	if ptr == nil {
-		return
-	}
-	v.Val = *ptr
-	v.Set = true
+func NewBool(v bool) (nullV Bool) {
+	nullV.Val = v
+	nullV.Set = true
 	return
 }
+
+func (v *Bool) P() *BoolP { return (*BoolP)(v.V.P()) }
 
 func (v *Bool) Scan(value any) (err error) {
 	var sqlV sql.NullBool
@@ -54,14 +53,13 @@ type Byte struct {
 	V[byte]
 }
 
-func NewByte(ptr *byte) (v Byte) {
-	if ptr == nil {
-		return
-	}
-	v.Val = *ptr
-	v.Set = true
+func NewByte(v byte) (nullV Byte) {
+	nullV.Val = v
+	nullV.Set = true
 	return
 }
+
+func (v *Byte) P() *ByteP { return (*ByteP)(v.V.P()) }
 
 func (v *Byte) Scan(value any) (err error) {
 	var sqlV sql.NullByte
@@ -85,14 +83,13 @@ type Int16 struct {
 	V[int16]
 }
 
-func NewInt16(ptr *int16) (v Int16) {
-	if ptr == nil {
-		return
-	}
-	v.Val = *ptr
-	v.Set = true
+func NewInt16(v int16) (nullV Int16) {
+	nullV.Val = v
+	nullV.Set = true
 	return
 }
+
+func (v *Int16) P() *Int16P { return (*Int16P)(v.V.P()) }
 
 func (v *Int16) Scan(value any) (err error) {
 	var sqlV sql.NullInt16
@@ -116,14 +113,13 @@ type Int32 struct {
 	V[int32]
 }
 
-func NewInt32(ptr *int32) (v Int32) {
-	if ptr == nil {
-		return
-	}
-	v.Val = *ptr
-	v.Set = true
+func NewInt32(v int32) (nullV Int32) {
+	nullV.Val = v
+	nullV.Set = true
 	return
 }
+
+func (v *Int32) P() *Int32P { return (*Int32P)(v.V.P()) }
 
 func (v *Int32) Scan(value any) (err error) {
 	var sqlV sql.NullInt32
@@ -147,14 +143,13 @@ type Int64 struct {
 	V[int64]
 }
 
-func NewInt64(ptr *int64) (v Int64) {
-	if ptr == nil {
-		return
-	}
-	v.Val = *ptr
-	v.Set = true
+func NewInt64(v int64) (nullV Int64) {
+	nullV.Val = v
+	nullV.Set = true
 	return
 }
+
+func (v *Int64) P() *Int64P { return (*Int64P)(v.V.P()) }
 
 func (v *Int64) Scan(value any) (err error) {
 	var sqlV sql.NullInt64
@@ -178,14 +173,13 @@ type Str struct {
 	V[string]
 }
 
-func NewStr(ptr *string) (v Str) {
-	if ptr == nil {
-		return
-	}
-	v.Val = *ptr
-	v.Set = true
+func NewStr(v string) (nullV Str) {
+	nullV.Val = v
+	nullV.Set = true
 	return
 }
+
+func (v *Str) P() *StrP { return (*StrP)(v.V.P()) }
 
 func (v *Str) Scan(value any) (err error) {
 	var sqlV sql.NullString
@@ -209,14 +203,13 @@ type Time struct {
 	V[time.Time]
 }
 
-func NewTime(ptr *time.Time) (v Time) {
-	if ptr == nil {
-		return
-	}
-	v.Val = *ptr
-	v.Set = true
+func NewTime(v time.Time) (nullV Time) {
+	nullV.Val = v
+	nullV.Set = true
 	return
 }
+
+func (v *Time) P() *TimeP { return (*TimeP)(v.V.P()) }
 
 func (v *Time) Scan(value any) (err error) {
 	var sqlV sql.NullTime
@@ -245,12 +238,9 @@ type DBType struct {
 	V[ScannerValuer]
 }
 
-func NewDBType[T ScannerValuer](ptr *T) (v DBType) {
-	if ptr == nil {
-		return
-	}
-	v.Val = *ptr
-	v.Set = true
+func NewDBType[T ScannerValuer](v T) (nullV DBType) {
+	nullV.Val = v
+	nullV.Set = true
 	return
 }
 
