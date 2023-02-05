@@ -236,7 +236,7 @@ type ScannerValuer interface {
 // DBType wraps V[ScannerValuer], sql.Scanner and driver.Valuer.
 type DBType[
 	T any,
-	pT interface{
+	pT interface {
 		*T
 		ScannerValuer
 	},
@@ -246,7 +246,7 @@ type DBType[
 
 func NewDBType[
 	T any,
-	pT interface{
+	pT interface {
 		*T
 		ScannerValuer
 	},
