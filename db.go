@@ -234,27 +234,39 @@ type ScannerValuer interface {
 }
 
 // DBType wraps V[ScannerValuer], sql.Scanner and driver.Valuer.
-type DBType[T ScannerValuer] struct {
+type DBType[
+	pT interface{
+		*T
+		ScannerValuer
+	},
+	T any,
+] struct {
 	V[T]
 }
 
-func NewDBType[T ScannerValuer](v T) (nullV DBType[T]) {
+func NewDBType[
+	pT interface{
+		*T
+		ScannerValuer
+	},
+	T any,
+](v T) (nullV DBType[pT, T]) {
 	nullV.Val = v
 	nullV.Set = true
 	return
 }
 
-func (v *DBType[T]) Scan(value any) (err error) {
-	if err = v.Val.Scan(value); err != nil {
+func (v *DBType[pT, T]) Scan(value any) (err error) {
+	if err = (pT)(&v.Val).Scan(value); err != nil {
 		return
 	}
 	v.Set = true
 	return
 }
 
-func (v *DBType[T]) Value() (driver.Value, error) {
+func (v *DBType[pT, T]) Value() (driver.Value, error) {
 	if !v.Set {
 		return nil, nil
 	}
-	return v.Val.Value()
+	return (pT)(&v.Val).Value()
 }

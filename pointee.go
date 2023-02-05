@@ -55,22 +55,28 @@ func (p *TimeP) IsSet() bool    { return pIsSet((*time.Time)(p)) }
 func (p *TimeP) V() Time        { return Time{pV((*time.Time)(p))} }
 
 // DBTypeP is a pointee to DBType.
-type DBTypeP[T ScannerValuer] struct {
+type DBTypeP[
+	pT interface{
+		*T
+		ScannerValuer
+	},
+	T any,
+] struct {
 	Internal T
 }
 
-func (p *DBTypeP[T]) Val() T      { return pVal(p).Internal }
-func (p *DBTypeP[T]) IsSet() bool { return pIsSet(p) }
+func (p *DBTypeP[pT, T]) Val() T      { return pVal(p).Internal }
+func (p *DBTypeP[pT, T]) IsSet() bool { return pIsSet(p) }
 
-func (v *DBTypeP[T]) MarshalJSON() ([]byte, error) {
+func (v *DBTypeP[pT, T]) MarshalJSON() ([]byte, error) {
 	return json.Marshal(v.Internal)
 }
 
-func (v *DBTypeP[T]) UnmarshalJSON(data []byte) error {
+func (v *DBTypeP[pT, T]) UnmarshalJSON(data []byte) error {
 	return json.Unmarshal(data, &v.Internal)
 }
 
-func (p *DBTypeP[T]) V() (v DBType[T]) {
+func (p *DBTypeP[pT, T]) V() (v DBType[pT, T]) {
 	if p == nil {
 		return
 	}
