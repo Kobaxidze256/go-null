@@ -25,21 +25,21 @@ func Example() {
 	_ = json.Unmarshal([]byte(`{"x": "x"}`), &x)
 	fmt.Println("x.X.IsSet():", x.X.IsSet())
 	fmt.Printf("x.X.Val(): %#v\n", x.X.Val())
-	fmt.Println("x.X.V().Set:", x.X.V().Set)
-	fmt.Printf("x.X.V().Val: %#v\n", x.X.V().Val)
+	fmt.Println("x.X.ToNull().Set:", x.X.ToNull().IsSet)
+	fmt.Printf("x.X.ToNull().Val: %#v\n", x.X.ToNull().Val)
 	fmt.Println("x.Y.IsSet():", x.Y.IsSet())
-	fmt.Println("x.Y.V().Set:", x.Y.V().Set)
+	fmt.Println("x.Y.ToNull().Set:", x.Y.ToNull().IsSet)
 
-	xXV := x.X.V()
-	xYV := x.Y.V()
+	xXV := x.X.ToNull()
+	xYV := x.Y.ToNull()
 	yBytes, _ := json.Marshal(
 		struct {
 			X *StrP `json:"x,omitempty"`
 			Y *StrP `json:"y,omitempty"`
 			Z *StrP `json:"z,omitempty"`
 		}{
-			xXV.P(),
-			xYV.P(),
+			xXV.Ptr(),
+			xYV.Ptr(),
 			nil,
 		},
 	)
@@ -48,9 +48,9 @@ func Example() {
 	// Output:
 	// x.X.IsSet(): true
 	// x.X.Val(): "x"
-	// x.X.V().Set: true
-	// x.X.V().Val: "x"
+	// x.X.ToNull().Set: true
+	// x.X.ToNull().Val: "x"
 	// x.Y.IsSet(): false
-	// x.Y.V().Set: false
+	// x.Y.ToNull().Set: false
 	// string(yBytes): `{"x":"x"}`
 }
