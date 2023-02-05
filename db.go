@@ -41,7 +41,7 @@ func (v *Bool) Scan(value any) (err error) {
 	return
 }
 
-func (v Bool) Value() (driver.Value, error) {
+func (v *Bool) Value() (driver.Value, error) {
 	return sql.NullBool{
 		Bool:  v.Val,
 		Valid: v.Set,
@@ -71,7 +71,7 @@ func (v *Byte) Scan(value any) (err error) {
 	return
 }
 
-func (v Byte) Value() (driver.Value, error) {
+func (v *Byte) Value() (driver.Value, error) {
 	return sql.NullByte{
 		Byte:  v.Val,
 		Valid: v.Set,
@@ -101,7 +101,7 @@ func (v *Int16) Scan(value any) (err error) {
 	return
 }
 
-func (v Int16) Value() (driver.Value, error) {
+func (v *Int16) Value() (driver.Value, error) {
 	return sql.NullInt16{
 		Int16: v.Val,
 		Valid: v.Set,
@@ -131,7 +131,7 @@ func (v *Int32) Scan(value any) (err error) {
 	return
 }
 
-func (v Int32) Value() (driver.Value, error) {
+func (v *Int32) Value() (driver.Value, error) {
 	return sql.NullInt32{
 		Int32: v.Val,
 		Valid: v.Set,
@@ -161,7 +161,7 @@ func (v *Int64) Scan(value any) (err error) {
 	return
 }
 
-func (v Int64) Value() (driver.Value, error) {
+func (v *Int64) Value() (driver.Value, error) {
 	return sql.NullInt64{
 		Int64: v.Val,
 		Valid: v.Set,
@@ -191,7 +191,7 @@ func (v *Str) Scan(value any) (err error) {
 	return
 }
 
-func (v Str) Value() (driver.Value, error) {
+func (v *Str) Value() (driver.Value, error) {
 	return sql.NullString{
 		String: v.Val,
 		Valid:  v.Set,
@@ -221,7 +221,7 @@ func (v *Time) Scan(value any) (err error) {
 	return
 }
 
-func (v Time) Value() (driver.Value, error) {
+func (v *Time) Value() (driver.Value, error) {
 	return sql.NullTime{
 		Time:  v.Val,
 		Valid: v.Set,
@@ -234,17 +234,17 @@ type ScannerValuer interface {
 }
 
 // DBType wraps V[ScannerValuer], sql.Scanner and driver.Valuer.
-type DBType struct {
-	V[ScannerValuer]
+type DBType[T ScannerValuer] struct {
+	V[T]
 }
 
-func NewDBType[T ScannerValuer](v T) (nullV DBType) {
+func NewDBType[T ScannerValuer](v T) (nullV DBType[T]) {
 	nullV.Val = v
 	nullV.Set = true
 	return
 }
 
-func (v *DBType) Scan(value any) (err error) {
+func (v *DBType[T]) Scan(value any) (err error) {
 	if err = v.Val.Scan(value); err != nil {
 		return
 	}
@@ -252,7 +252,7 @@ func (v *DBType) Scan(value any) (err error) {
 	return
 }
 
-func (v DBType) Value() (driver.Value, error) {
+func (v *DBType[T]) Value() (driver.Value, error) {
 	if !v.Set {
 		return nil, nil
 	}

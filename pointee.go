@@ -1,6 +1,9 @@
 package null
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 // BoolP is a pointee to bool.
 type BoolP bool
@@ -50,3 +53,28 @@ type TimeP time.Time
 func (p *TimeP) Val() time.Time { return pVal((*time.Time)(p)) }
 func (p *TimeP) Set() bool      { return pSet((*time.Time)(p)) }
 func (p *TimeP) V() Time        { return Time{pV((*time.Time)(p))} }
+
+// DBTypeP is a pointee to DBType.
+type DBTypeP[T ScannerValuer] struct {
+	Internal T
+}
+
+func (p *DBTypeP[T]) Val() T    { return pVal(p).Internal }
+func (p *DBTypeP[T]) Set() bool { return pSet(p) }
+
+func (v *DBTypeP[T]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(v.Internal)
+}
+
+func (v *DBTypeP[T]) UnmarshalJSON(data []byte) error {
+	return json.Unmarshal(data, &v.Internal)
+}
+
+func (p *DBTypeP[T]) V() (v DBType[T]) {
+	if p == nil {
+		return
+	}
+	v.Val = p.Internal
+	v.Set = true
+	return
+}
