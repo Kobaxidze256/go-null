@@ -41,7 +41,7 @@ func (v *Bool) Scan(value any) (err error) {
 	return
 }
 
-func (v *Bool) Value() (driver.Value, error) {
+func (v Bool) Value() (driver.Value, error) {
 	return sql.NullBool{
 		Bool:  v.Val,
 		Valid: v.IsSet,
@@ -71,7 +71,7 @@ func (v *Byte) Scan(value any) (err error) {
 	return
 }
 
-func (v *Byte) Value() (driver.Value, error) {
+func (v Byte) Value() (driver.Value, error) {
 	return sql.NullByte{
 		Byte:  v.Val,
 		Valid: v.IsSet,
@@ -101,7 +101,7 @@ func (v *Int16) Scan(value any) (err error) {
 	return
 }
 
-func (v *Int16) Value() (driver.Value, error) {
+func (v Int16) Value() (driver.Value, error) {
 	return sql.NullInt16{
 		Int16: v.Val,
 		Valid: v.IsSet,
@@ -131,7 +131,7 @@ func (v *Int32) Scan(value any) (err error) {
 	return
 }
 
-func (v *Int32) Value() (driver.Value, error) {
+func (v Int32) Value() (driver.Value, error) {
 	return sql.NullInt32{
 		Int32: v.Val,
 		Valid: v.IsSet,
@@ -161,7 +161,7 @@ func (v *Int64) Scan(value any) (err error) {
 	return
 }
 
-func (v *Int64) Value() (driver.Value, error) {
+func (v Int64) Value() (driver.Value, error) {
 	return sql.NullInt64{
 		Int64: v.Val,
 		Valid: v.IsSet,
@@ -191,7 +191,7 @@ func (v *Str) Scan(value any) (err error) {
 	return
 }
 
-func (v *Str) Value() (driver.Value, error) {
+func (v Str) Value() (driver.Value, error) {
 	return sql.NullString{
 		String: v.Val,
 		Valid:  v.IsSet,
@@ -221,7 +221,7 @@ func (v *Time) Scan(value any) (err error) {
 	return
 }
 
-func (v *Time) Value() (driver.Value, error) {
+func (v Time) Value() (driver.Value, error) {
 	return sql.NullTime{
 		Time:  v.Val,
 		Valid: v.IsSet,
@@ -265,7 +265,7 @@ func (v *CustomT[T, pT]) Scan(value any) (err error) {
 	return
 }
 
-func (v *CustomT[T, pT]) Value() (driver.Value, error) {
+func (v CustomT[T, pT]) Value() (driver.Value, error) {
 	if !v.IsSet {
 		return nil, nil
 	}

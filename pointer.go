@@ -121,7 +121,7 @@ func (p *CustomTP[T, pT]) Scan(value any) (err error) {
 	return
 }
 
-func (p *CustomTP[T, pT]) Value() (driver.Value, error) {
+func (p CustomTP[T, pT]) Value() (driver.Value, error) {
 	if !p.IsSet() {
 		return nil, nil
 	}
