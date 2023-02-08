@@ -28,7 +28,7 @@ func (v *J[T]) MarshalJSON() ([]byte, error) {
 	if !v.IsSet {
 		return []byte("null"), nil
 	}
-	return json.Marshal(v.Val)
+	return json.Marshal(&v.Val)
 }
 
 func (v *J[T]) UnmarshalJSON(data []byte) error {

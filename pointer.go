@@ -1,6 +1,19 @@
+/*
+	Copyright (C) 2023 Giorgi Kobakhidze
+
+	This file is part of go-null.
+
+	go-null is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, version 3 of the License.
+
+	go-null is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+
+	You should have received a copy of the GNU Lesser General Public License along with go-null. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 package null
 
 import (
+	"database/sql/driver"
 	"encoding/json"
 	"time"
 )
@@ -93,12 +106,26 @@ func NewDBTypeP[
 func (p *CustomTP[T, pT]) Val() T      { return ptrVal(p).Internal }
 func (p *CustomTP[T, pT]) IsSet() bool { return ptrIsSet(p) }
 
-func (v *CustomTP[T, pT]) MarshalJSON() ([]byte, error) {
-	return json.Marshal(v.Internal)
+func (p *CustomTP[T, pT]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&p.Internal)
 }
 
-func (v *CustomTP[T, pT]) UnmarshalJSON(data []byte) error {
-	return json.Unmarshal(data, &v.Internal)
+func (p *CustomTP[T, pT]) UnmarshalJSON(data []byte) error {
+	return json.Unmarshal(data, &p.Internal)
+}
+
+func (p *CustomTP[T, pT]) Scan(value any) (err error) {
+	if err = (pT)(&p.Internal).Scan(value); err != nil {
+		return
+	}
+	return
+}
+
+func (p *CustomTP[T, pT]) Value() (driver.Value, error) {
+	if !p.IsSet() {
+		return nil, nil
+	}
+	return (pT)(&p.Internal).Value()
 }
 
 func (p *CustomTP[T, pT]) ToNull() (v CustomT[T, pT]) {
