@@ -235,6 +235,7 @@ type ScannerValuer interface {
 
 // CustomT wraps J[ScannerValuer], sql.Scanner and driver.Valuer.
 // Internal type T has to be given as T and as *T.
+// *T must support json marshaling and unmarshaling.
 type CustomT[
 	T any,
 	pT interface {

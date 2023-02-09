@@ -18,7 +18,7 @@ import (
 
 // J can be used to create new nullable values
 // that work with encoding/json and pointers.
-// T must support json marshaling and unmarshaling.
+// *T must support json marshaling and unmarshaling.
 type J[T any] struct {
 	Val   T
 	IsSet bool

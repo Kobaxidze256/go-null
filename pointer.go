@@ -81,8 +81,9 @@ func (p *TimeP) Val() time.Time   { return ptrVal((*time.Time)(p)) }
 func (p *TimeP) IsSet() bool      { return ptrIsSet((*time.Time)(p)) }
 func (p *TimeP) ToNull() Time     { return Time{NewJ((*time.Time)(p))} }
 
-// CustomTP acts as DBType in *CustomTP,
+// CustomTP acts as CustomT in *CustomTP,
 // but has convenient methods.
+// *T must support json marshaling and unmarshaling.
 type CustomTP[
 	T any,
 	pT interface {
