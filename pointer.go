@@ -36,6 +36,15 @@ func (p *ByteP) Val() byte    { return ptrVal((*byte)(p)) }
 func (p *ByteP) IsSet() bool  { return ptrIsSet((*byte)(p)) }
 func (p *ByteP) ToNull() Byte { return Byte{NewJ((*byte)(p))} }
 
+// Float64P acts as float64 in *Float64P,
+// but has convenient methods.
+type Float64P float64
+
+func NewFloat64P(v float64) *Float64P { return (*Float64P)(&v) }
+func (p *Float64P) Val() float64      { return ptrVal((*float64)(p)) }
+func (p *Float64P) IsSet() bool       { return ptrIsSet((*float64)(p)) }
+func (p *Float64P) ToNull() Float64   { return Float64{NewJ((*float64)(p))} }
+
 // Int16P acts as int16 in *Int16P,
 // but has convenient methods.
 type Int16P int16

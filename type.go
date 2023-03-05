@@ -78,6 +78,36 @@ func (v Byte) Value() (driver.Value, error) {
 	}.Value()
 }
 
+// Float64 wraps J[float64] and sql.NullFloat64.
+type Float64 struct {
+	J[float64]
+}
+
+func NewFloat64(v float64) (nullV Float64) {
+	nullV.Val = v
+	nullV.IsSet = true
+	return
+}
+
+func (v *Float64) Ptr() *Float64P { return (*Float64P)(v.J.Ptr()) }
+
+func (v *Float64) Scan(value any) (err error) {
+	var sqlV sql.NullFloat64
+	if err = sqlV.Scan(value); err != nil {
+		return
+	}
+	v.Val = sqlV.Float64
+	v.IsSet = sqlV.Valid
+	return
+}
+
+func (v Float64) Value() (driver.Value, error) {
+	return sql.NullFloat64{
+		Float64: v.Val,
+		Valid:   v.IsSet,
+	}.Value()
+}
+
 // Int16 wraps J[int16] and sql.NullInt16.
 type Int16 struct {
 	J[int16]
